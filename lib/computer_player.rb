@@ -1,16 +1,34 @@
-# TODO implement logic
-
 class ComputerPlayer
   def initialize
-    @possible_colors = Code::COLORS
+    @colors = Code::COLORS
+    @all_codes = @colors.repeated_permutation(Code::CODE_LENGTH).to_a
+    @remaining_codes = @all_codes.dup
+    @current_guess = ["R","R","G","G"]
   end
 
   def make_guess
-    guess = Code::COLORS.sample(4).join
-    guess
+    @current_guess ||= @remaining_codes.sample
   end
 
   def learn_from_feedback(exact, partial, guess)
-    make_guess
+    @remaining_codes.select! do |code|
+      Code.new(code).compare(guess) == [exact, partial]
+    end
+
+    color_frequencies = count_color_frequencies(@remaining_codes)
+    
+    @current_guess = @remaining_codes.max_by do |code|
+      code.sum { |color| color_frequencies[color] }
+    end
+  end
+
+  def count_color_frequencies(codes)
+    freq = Hash.new(0)
+
+    codes.each do |code|
+      code.each { |color| freq[color] += 1 }
+    end
+
+    freq
   end
 end

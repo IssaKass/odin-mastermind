@@ -1,4 +1,5 @@
 require_relative '../lib/validation'
+require_relative '../lib/code'
 
 RSpec.describe Validation do
   include Validation

@@ -1,4 +1,4 @@
-# odin-mastermind
+# 🧩 odin-mastermind
 
 This is a simple implementation of the Mastermind game in Ruby. The game is played in the terminal, where you try to guess a secret 4-color code in a limited number of attempts.
 
@@ -9,6 +9,7 @@ This is a simple implementation of the Mastermind game in Ruby. The game is play
 - Code-breaking game with exact and partial matches.
 - Win/lose detection.
 - Colorized output using the colorized gem.
+- Computer player that **learns from feedback** to improve guesses.
 
 ## How to Run
 
@@ -29,7 +30,3 @@ This is a simple implementation of the Mastermind game in Ruby. The game is play
    ```
    ruby main.rb
    ```
-
-## Future Features
-
-- Make the computer player learn from feedback.

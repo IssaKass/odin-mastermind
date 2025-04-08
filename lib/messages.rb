@@ -1,10 +1,17 @@
 module Messages
   class << self
-    def welcome_message
+    def welcome_message(role = :creator)
       message = "🎯 Welcome to #{'Mastermind'.bold}!".colorize(:cyan)
       message += "\nAvailable colors: #{display_colors}"
       message += "\nGuess the 4-color code. Duplicates allowed."
-      message += "\nYou have #{Mastermind::MAX_TURNS} attempts. Enter your guess like: RGBY"
+      
+      if role == :guesser
+        message += "\nYou have #{Mastermind::MAX_TURNS} guesses to crack the code."
+        message += "\nYou are the guesser. Enter your guess like: RGBY (4 colors)"
+      else
+        message += "\nYou are the code creator. Please enter your secret code."
+      end
+
       message
     end
 
@@ -20,25 +27,25 @@ module Messages
       "=> Exact: #{exact}, Partial: #{partial}"
     end
 
-    def win_message
+    def guesser_win_message
       "\n🎉 #{'You cracked the code!'.bold.green}"
     end
 
-    def lose_message(code)
+    def guesser_lose_message(code)
       "\n💥 Out of turns! The code was: #{colorize_code(code)}"
     end
 
-    def computer_guess(guess)
-      "\nComputer's guess: #{guess}"
-    end
-    
-    def creator_message
-      "You are the code creator. Please enter your secret code." 
+    def creator_win_message
+      "\n🤖 #{'Computer cracked your code!'.bold.red} Better luck next time!"
     end
 
-    def guesser_message
-      "You are the guesser. Guess the computer's secret code."
-    end 
+    def creator_lose_message(code)
+      "\n🧠 #{'You outsmarted the computer!'.bold.green} The code was: #{colorize_code(code)}"
+    end
+
+    def computer_guess(guess, turns_left)
+      "\nComputer's guess ##{turns_left}: #{colorize_code(guess)}"
+    end
 
     def display_colors
       Code::COLORS.map { |c| Code.colored(c) }.join(" ")

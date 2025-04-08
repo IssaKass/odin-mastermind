@@ -1,15 +1,15 @@
 require 'colorize'
 
 class Code
-  COLORS = ["R","G","B","Y","O","P"].freeze
+  COLORS = ["R","G","B","Y","C","M"].freeze
   CODE_LENGTH = 4
   COLOR_MAP = {
     "R" => :red,
     "G" => :green,
     "B" => :blue,
     "Y" => :yellow,
-    "O" => :light_red,
-    "P" => :magenta
+    "C" => :cyan,
+    "M" => :magenta
   }.freeze
 
   
@@ -24,7 +24,7 @@ class Code
   end
 
   def compare(guess)
-    guess_copy = guess.upcase.chars
+    guess_copy = Code.normalize_guess(guess)
     secret_copy = @secret.dup
     exact, partial = 0, 0
 
@@ -46,6 +46,10 @@ class Code
     end
 
     [exact, partial]
+  end
+
+  def self.normalize_guess(input)
+    input.is_a?(String) ? input.upcase.chars : input.map(&:upcase)
   end
 
 end

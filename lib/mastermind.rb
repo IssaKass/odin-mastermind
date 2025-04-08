@@ -21,18 +21,19 @@ class Mastermind
     @player.choose_role
     
     if @player.role == :creator
-      puts Messages.creator_message
-      
-      secret = gets.chomp.upcase
+      puts Messages.welcome_message(:creator)
+
+      secret = gets.chomp.upcase.chars
+
       unless valid_guess?(secret, Code::COLORS, Code::CODE_LENGTH)
         puts Messages.invalid_guess_message
-        secret = gets.chomp.upcase
+        secret = gets.chomp.upcase.chars
       end
 
-      @code = Code.new(secret.chars)
+      @code = Code.new(secret)
       play_as_creator
     else 
-      puts Messages.guesser_message
+      puts Messages.welcome_message(:guesser)
       @code = Code.new
       play_as_guesser
     end
@@ -41,11 +42,9 @@ class Mastermind
   private
 
   def play_as_guesser
-    puts Messages.welcome_message
-
     while @turns_left > 0
       print Messages.ask_for_guess(@turns_left)
-      input = gets.chomp
+      input = gets.chomp.upcase.chars
 
       unless valid_guess?(input, Code::COLORS, Code::CODE_LENGTH)
         puts Messages.invalid_guess_message
@@ -56,26 +55,26 @@ class Mastermind
       puts Messages.feedback_message(exact, partial)
 
       if exact == Code::CODE_LENGTH
-        puts Messages.win_message
+        puts Messages.guesser_win_message
         return
       end
 
       @turns_left -= 1
     end
 
-    puts Messages.lose_message(@code.secret)
+    puts Messages.guesser_lose_message(@code.secret)
   end
 
   def play_as_creator
     while @turns_left > 0
       guess = @computer_player.make_guess
-      puts Messages.computer_guess(guess)
+      puts Messages.computer_guess(guess, @turns_left)
 
       exact, partial = @code.compare(guess)
       puts Messages.feedback_message(exact, partial)
 
       if exact == Code::CODE_LENGTH
-        puts Messages.lose_message(@code.secret)
+        puts Messages.creator_win_message
         return
       end
 
@@ -83,7 +82,7 @@ class Mastermind
       @turns_left -= 1
     end
 
-    puts Messages.win_message
+    puts Messages.creator_lose_message(@code.secret)
   end
 
 end
